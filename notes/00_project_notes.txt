@@ -1,0 +1,84 @@
+### Test/Validate
+- Test all APIs before implementation starts to make sure they are accessible and deliver what is needed. Maybe you need to prepare payload to send to the APIs (JSON, images, ...)
+- Clarify what permissions service accounts need and grant them. Make sure to estimate potential costs by using services.
+
+
+### Links
+
+Grading standards by company
+- PSA: https://www.psacard.com/gradingstandards#cards
+- BGS: https://www.beckett.com/grading-standards
+- CGC: https://www.cgccards.com/card-grading/grading-scale/
+- TAG: https://taggrading.com/pages/scale
+
+Card games
+- Magic the gathering: https://magic.wizards.com/en
+- Flesh and blood: https://fabtcg.com/
+
+Card prices
+- cardmarket: https://www.cardmarket.com/en > API keys not available. This source can therefore not be used.
+
+
+### Tech stack
+- Code repository: https://github.com/Schiggy-3000/card_grading.git
+- Frontend UI: GitHub Pages
+- Frontend: React
+- Backend: Python (deployed as Google Cloud Functions)
+- Frontend verification: Playwright (Python)
+- CI/CD: GitHub Actions (deploy to GitHub Pages, deploy Python functions to Google Cloud Functions)
+- Computer vision API: Google Cloud Vision (OCR + image analysis) + OpenCV (physical condition analysis)
+- Card details API (MTG): Scryfall API (https://scryfall.com/docs/api)
+- Card details API (FAB): JSON of all cards > GitHub repository the-fab-cube/flesh-and-blood-cards, Images > cards.fabtcg.com or fabdb.net 
+- Card price API (MTG): Scryfall API (provides only current price, no history. This is fine for a first minimum viable product (MVP))
+- Card price API (FAB): There is currently no API available (cardmarket does not provision API keys). You can show "Price not available" or something as placeholder
+
+
+### Credentials
+- Google Cloud service account: .credentials/card-grading-492013-2de49a09ec20.json (currently no permissions!)
+- Google Cloud Vision API credential: Use the GCP service account
+- Card details API (MTG) credential/tokens: Apparently, Scryfall does not require an API key
+- Card details API (FAB) credential/tokens: None needed
+- Card price API (MTG) credential/tokens: Apparently, Scryfall does not require an API key
+- Card price API (FAB) credential/tokens: None
+
+
+### Infrastructure
+- No additional infrastructure components required
+
+
+### Miscellaneous
+- Google Cloud Vision API: Is enabled
+- GitHub repo > Settings > Pages > Build and deployment > GitHub Actions 
+- GitHub repo > Settings > Secrets and variables > Actions > Repository secrets > GCP_PROJECT_ID is added
+- GitHub repo > Settings > Secrets and variables > Actions > Repository secrets > GCP_SERVICE_ACCOUNT_KEY is added
+
+
+### Claude Code skills
+- Software development workflow: "superpowers" (https://github.com/obra/superpowers) is installed and activated
+- Frontend design: The official "Frontend Design" from Antropic is installed and activated
+
+
+### Claude Code connectors
+- None required
+
+
+### Features
+1. Card recognition
+- Only cards from the card games Magic the gathering and Flesh and blood are in the scope
+- The card recognition feature recognizes a given card by a picture of its frontside
+- Not only the correct card, but also the correct version (edition, promo, foil, foil type, language, collectors edition, ...) must be identified
+- A confidence score that represent the certainty with which a card was recognized is also shown
+- A picture of the identified card is fetched (e.g. from an API) and also shown. This lets the user quickly verify that the card recognition feature recognized the correct card. It is vital that not only the correct card but also the correct version (edition, promo, foil, foil type, language, collectors edition, ...) of the card is displayed.
+- A graph that shows the avg. selling price must also be shown. The x-axis shows the time, the y-axis the avg. price. The ranges for both axes should not be static but be adjusted to the available data points
+
+2. Card grading
+- Only cards from the card games Magic the gathering and Flesh and blood are in the scope
+- The card grading feature grades a given card according to the selected grading standard (PSA, BGS, CGC, TAG) by a picture of its front and backside
+- A grade estimate for the selected grading standard is shown
+- A detailed description for why a given grade came to be must be shown
+- The card grading feature must also recognize the card (correct card and correct version) and show its details (name, version, etc.)
+
+
+### GitHub README.md
+- Carefully research what best practices are when creating a README.md
+- I am a visual person, make sure to take this into account
