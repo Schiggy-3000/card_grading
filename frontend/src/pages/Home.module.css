@@ -1,0 +1,106 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg-base);
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-lg);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.title {
+  color: var(--accent);
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.settingsBtn {
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: var(--transition);
+  padding: var(--spacing-xs);
+}
+
+.settingsBtn:hover {
+  color: var(--accent-hover);
+}
+
+.tools {
+  display: flex;
+  gap: var(--spacing-lg);
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.toolCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  min-width: 200px;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.toolCard:hover {
+  border-color: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.toolIcon {
+  font-size: 2.5rem;
+}
+
+.toolName {
+  color: var(--accent);
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.toolDesc {
+  color: #888;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid #333;
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.historyLink {
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  font-family: inherit;
+}
+
+.historyLink:hover {
+  color: var(--accent-hover);
+}
