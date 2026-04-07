@@ -10,6 +10,32 @@ from playwright.sync_api import Page, Route
 # E.g. BASE_URL + "/#/identify" → ".../card_grading/#/identify" (not ".../card_grading//#/identify").
 # Vite dev server serves the app at both ".../card_grading" and ".../card_grading/" without redirect.
 BASE_URL = os.getenv("PLAYWRIGHT_BASE_URL", "http://localhost:5173/card_grading/").rstrip("/")
+_RECOGNIZE_API_BASE = os.getenv("VITE_RECOGNIZE_URL", "http://localhost:8081").rstrip("/")
+RECOGNIZE_API_URL = _RECOGNIZE_API_BASE + "/**"
+_GRADE_API_BASE = os.getenv("VITE_GRADE_URL", "http://localhost:8082").rstrip("/")
+GRADE_API_URL = _GRADE_API_BASE + "/**"
+
+# Playwright does NOT auto-add CORS headers to synthetic responses, so cross-origin
+# route.fulfill() calls require explicit CORS headers — otherwise the browser validates
+# and blocks the response. r.abort() bypasses this check (no response to validate).
+_CORS_HEADERS = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+}
+
+
+def _fulfill_json(route, status: int, body: str) -> None:
+    """Fulfill a route with JSON + CORS headers. Handles OPTIONS preflight automatically."""
+    if route.request.method == "OPTIONS":
+        route.fulfill(status=200, headers=_CORS_HEADERS)
+        return
+    route.fulfill(
+        status=status,
+        content_type="application/json",
+        headers=_CORS_HEADERS,
+        body=body,
+    )
 
 MOCK_CANDIDATES = [
     {
@@ -51,28 +77,16 @@ def page_at_home(page: Page):
 
 def mock_recognize_success(page: Page, candidates=None, low_confidence=False):
     payload = {"candidates": candidates or MOCK_CANDIDATES, "low_confidence": low_confidence}
-    page.route("**/recognize**", lambda r: r.fulfill(
-        status=200,
-        content_type="application/json",
-        body=json.dumps(payload),
-    ))
+    page.route(RECOGNIZE_API_URL, lambda r: _fulfill_json(r, 200, json.dumps(payload)))
 
 
 def mock_recognize_ocr_failed(page: Page):
     payload = {"candidates": [], "ocr_failed": True, "low_confidence": False}
-    page.route("**/recognize**", lambda r: r.fulfill(
-        status=200,
-        content_type="application/json",
-        body=json.dumps(payload),
-    ))
+    page.route(RECOGNIZE_API_URL, lambda r: _fulfill_json(r, 200, json.dumps(payload)))
 
 
 def mock_grade_success(page: Page, result=None):
-    page.route("**/grade**", lambda r: r.fulfill(
-        status=200,
-        content_type="application/json",
-        body=json.dumps(result or MOCK_GRADE_RESULT),
-    ))
+    page.route(GRADE_API_URL, lambda r: _fulfill_json(r, 200, json.dumps(result or MOCK_GRADE_RESULT)))
 
 
 def mock_network_error(page: Page, url_pattern: str):
