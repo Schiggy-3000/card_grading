@@ -1,0 +1,73 @@
+name: Backend — Test & Deploy
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend.yml"
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      - name: Install test dependencies
+        run: |
+          pip install pytest
+          pip install -r backend/recognize/requirements.txt
+          pip install -r backend/grade/requirements.txt
+
+      - name: Run recognize unit tests
+        run: pytest backend/recognize/tests/ -v
+        env:
+          PYTHONPATH: backend/recognize
+
+      - name: Run grade unit tests
+        run: pytest backend/grade/tests/ -v
+        env:
+          PYTHONPATH: backend/grade
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy recognize function
+        run: |
+          gcloud functions deploy recognize \
+            --gen2 \
+            --runtime=python39 \
+            --region=europe-west1 \
+            --source=backend/recognize \
+            --entry-point=recognize \
+            --trigger-http \
+            --allow-unauthenticated \
+            --memory=512MB \
+            --timeout=60s \
+            --project=card-grading-492013
+
+      - name: Deploy grade function
+        run: |
+          gcloud functions deploy grade \
+            --gen2 \
+            --runtime=python39 \
+            --region=europe-west1 \
+            --source=backend/grade \
+            --entry-point=grade \
+            --trigger-http \
+            --allow-unauthenticated \
+            --memory=512MB \
+            --timeout=120s \
+            --project=card-grading-492013
