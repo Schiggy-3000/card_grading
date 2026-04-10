@@ -94,11 +94,28 @@
   font-size: 0.9rem;
 }
 
+.ocrRow {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: flex-start;
+}
+
+.ocrPreview {
+  width: 140px;
+  flex-shrink: 0;
+  border-radius: var(--radius);
+  border: 1px solid #333;
+  object-fit: contain;
+  background: #000;
+}
+
 .ocrSection {
   background: var(--bg-surface);
   border: 1px solid #333;
   border-radius: var(--radius);
   padding: var(--spacing-sm) var(--spacing-md);
+  flex: 1;
+  min-width: 0;
 }
 
 .ocrToggle {

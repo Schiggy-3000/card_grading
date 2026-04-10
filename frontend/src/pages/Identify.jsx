@@ -14,6 +14,7 @@ export default function Identify() {
 
   const [game, setGame] = useState(null)
   const [imageB64, setImageB64] = useState(null)
+  const [imagePreviewUrl, setImagePreviewUrl] = useState(null)
   const [loading, setLoading] = useState(false)
   const [candidates, setCandidates] = useState(null)
   const [lowConfidence, setLowConfidence] = useState(false)
@@ -112,6 +113,7 @@ export default function Identify() {
           label="Front of card"
           testId="front"
           onFile={setImageB64}
+          onPreview={setImagePreviewUrl}
         />
 
         {/* Submit */}
@@ -167,12 +169,22 @@ export default function Identify() {
           />
         )}
 
-        {/* OCR text */}
+        {/* Uploaded image + OCR text side by side */}
         {ocrText && (
-          <details className={styles.ocrSection}>
-            <summary className={styles.ocrToggle}>Raw OCR text</summary>
-            <pre className={styles.ocrText} data-testid="ocr-text">{ocrText}</pre>
-          </details>
+          <div className={styles.ocrRow}>
+            {imagePreviewUrl && (
+              <img
+                className={styles.ocrPreview}
+                src={imagePreviewUrl}
+                alt="Uploaded card"
+                data-testid="uploaded-image"
+              />
+            )}
+            <details className={styles.ocrSection}>
+              <summary className={styles.ocrToggle}>Raw OCR text</summary>
+              <pre className={styles.ocrText} data-testid="ocr-text">{ocrText}</pre>
+            </details>
+          </div>
         )}
       </main>
     </div>
