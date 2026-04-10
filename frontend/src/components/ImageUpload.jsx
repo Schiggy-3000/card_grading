@@ -4,7 +4,7 @@ import styles from './ImageUpload.module.css'
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const MAX_SIZE_BYTES = 10 * 1024 * 1024
 
-export default function ImageUpload({ label, testId, onFile = () => {} }) {
+export default function ImageUpload({ label, testId, onFile = () => {}, onPreview = () => {} }) {
   const inputRef = useRef(null)
   const readerRef = useRef(null)
   const [fileName, setFileName] = useState(null)
@@ -33,7 +33,7 @@ export default function ImageUpload({ label, testId, onFile = () => {} }) {
         readerRef.current?.abort()
         const reader = new FileReader()
         readerRef.current = reader
-        reader.onload = () => resolve(reader.result.split(',')[1])
+        reader.onload = () => { onPreview(reader.result); resolve(reader.result.split(',')[1]) }
         reader.onerror = reject
         reader.readAsDataURL(file)
       })
