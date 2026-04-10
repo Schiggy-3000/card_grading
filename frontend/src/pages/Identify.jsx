@@ -42,9 +42,15 @@ export default function Identify() {
         setOcrFailed(true)
         setShowManualSearch(true)
       } else {
-        setOcrText(data.ocr_text || null)
+        const ocr = data.ocr_text || null
+        setOcrText(ocr)
         setCandidates(data.candidates)
         setLowConfidence(data.low_confidence)
+        addHistoryEntry({
+          tool: 'identify',
+          cardName: null,
+          result: { candidates: data.candidates, ocr_text: ocr, imagePreviewUrl },
+        })
       }
     } catch {
       setNetworkError(true)
@@ -77,7 +83,6 @@ export default function Identify() {
 
   function handleSelect(candidate) {
     setSelected(candidate)
-    addHistoryEntry({ tool: 'identify', cardName: candidate.name, result: candidate })
   }
 
   function handleNotRightCard() {
