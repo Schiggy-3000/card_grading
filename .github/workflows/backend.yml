@@ -18,7 +18,7 @@ jobs:
       - name: Set up Python 3.9
         uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version: "3.12"
 
       - name: Install test dependencies
         run: |
@@ -48,7 +48,7 @@ jobs:
         run: |
           gcloud functions deploy recognize \
             --gen2 \
-            --runtime=python39 \
+            --runtime=python312 \
             --region=europe-west1 \
             --source=backend/recognize \
             --entry-point=recognize \
@@ -62,7 +62,7 @@ jobs:
         run: |
           gcloud functions deploy grade \
             --gen2 \
-            --runtime=python39 \
+            --runtime=python312 \
             --region=europe-west1 \
             --source=backend/grade \
             --entry-point=grade \
