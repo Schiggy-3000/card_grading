@@ -21,11 +21,23 @@ def test_scores_are_floats_in_1_to_10_range(mtg_front_bytes, mtg_back_bytes):
 
 def test_reasoning_returned_for_each_dimension(mtg_front_bytes, mtg_back_bytes):
     from defect_detection import analyze_with_reasoning
-    scores, reasoning = analyze_with_reasoning(mtg_front_bytes, mtg_back_bytes)
-    for dim in ("centering", "corners", "edges", "surface"):
-        assert dim in reasoning
-        assert isinstance(reasoning[dim], str)
-        assert len(reasoning[dim]) > 0
+    front, back = analyze_with_reasoning(mtg_front_bytes, mtg_back_bytes)
+    for side in (front, back):
+        for dim in ("centering", "corners", "edges", "surface"):
+            assert dim in side["reasoning"]
+            assert isinstance(side["reasoning"][dim], str)
+            assert len(side["reasoning"][dim]) > 0
+
+
+def test_bbox_image_returned_for_each_side(mtg_front_bytes, mtg_back_bytes):
+    import base64
+    from defect_detection import analyze_with_reasoning
+    front, back = analyze_with_reasoning(mtg_front_bytes, mtg_back_bytes)
+    for side in (front, back):
+        assert isinstance(side["bbox_image"], str)
+        assert len(side["bbox_image"]) > 0
+        decoded = base64.b64decode(side["bbox_image"])
+        assert decoded[:2] == b'\xff\xd8'  # JPEG magic bytes
 
 
 def test_fab_card_also_works(fab_front_bytes, mtg_back_bytes):

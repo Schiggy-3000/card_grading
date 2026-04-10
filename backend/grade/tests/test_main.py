@@ -10,19 +10,23 @@ MOCK_REASONING = {
     "edges": "Clean edges.",
     "surface": "Light scratching.",
 }
+MOCK_SIDE = {"subgrades": MOCK_SCORES, "reasoning": MOCK_REASONING, "bbox_image": ""}
 
 
 def test_grade_returns_full_result():
     from main import grade
-    with patch("main.analyze_with_reasoning", return_value=(MOCK_SCORES, MOCK_REASONING)):
+    with patch("main.analyze_with_reasoning", return_value=(MOCK_SIDE, MOCK_SIDE)):
         resp, status = grade(make_request({
             "front": FAKE_B64, "back": FAKE_B64, "standard": "psa"
         }))
     assert status == 200
     body = resp.get_json()
-    assert "overall" in body
-    assert "subgrades" in body
-    assert "reasoning" in body
+    assert "front" in body
+    assert "back" in body
+    assert "overall" in body["front"]
+    assert "subgrades" in body["front"]
+    assert "reasoning" in body["front"]
+    assert "bbox_image" in body["front"]
     assert body["standard"] == "psa"
 
 
@@ -47,7 +51,7 @@ def test_invalid_standard_returns_400():
 def test_all_four_standards_accepted():
     from main import grade
     for std in ("psa", "bgs", "cgc", "tag"):
-        with patch("main.analyze_with_reasoning", return_value=(MOCK_SCORES, MOCK_REASONING)):
+        with patch("main.analyze_with_reasoning", return_value=(MOCK_SIDE, MOCK_SIDE)):
             resp, status = grade(make_request({"front": FAKE_B64, "back": FAKE_B64, "standard": std}))
         assert status == 200, f"Standard {std} returned {status}"
 

@@ -45,11 +45,16 @@ def grade(request: Request) -> Tuple:
         return _json({"error": "Invalid base64 image data"}), 400
 
     try:
-        subgrades, reasoning = analyze_with_reasoning(front_bytes, back_bytes)
+        front_result, back_result = analyze_with_reasoning(front_bytes, back_bytes)
     except Exception as e:
         return _json({"error": f"Image analysis failed: {str(e)}"}), 500
 
-    result = map_to_standard(subgrades, standard)
-    result["reasoning"] = reasoning
+    front_grade = map_to_standard(front_result["subgrades"], standard)
+    front_grade["reasoning"] = front_result["reasoning"]
+    front_grade["bbox_image"] = front_result["bbox_image"]
 
-    return _add_cors(_json(result)), 200
+    back_grade = map_to_standard(back_result["subgrades"], standard)
+    back_grade["reasoning"] = back_result["reasoning"]
+    back_grade["bbox_image"] = back_result["bbox_image"]
+
+    return _add_cors(_json({"standard": standard, "front": front_grade, "back": back_grade})), 200
