@@ -81,3 +81,29 @@ def test_history_clears_on_page_reload(page: Page):
     # Full reload should clear in-memory sessionHistory
     page.reload()
     assert "0" in page.locator("[data-testid='footer']").inner_text()
+
+
+def test_clicking_identify_entry_shows_card_detail(page: Page):
+    _do_identify(page)
+    page.goto(BASE_URL + "/#/history")
+    page.locator("[data-testid='history-entry']").first.click()
+    page.wait_for_selector("[data-testid='history-result']")
+    assert "Black Lotus" in page.locator("[data-testid='history-result']").inner_text()
+
+
+def test_clicking_grade_entry_shows_grade_result(page: Page):
+    _do_grade(page)
+    page.goto(BASE_URL + "/#/history")
+    page.locator("[data-testid='history-entry']").first.click()
+    page.wait_for_selector("[data-testid='history-result']")
+    assert page.locator("[data-testid='grade-result']").is_visible()
+
+
+def test_clicking_entry_twice_collapses_result(page: Page):
+    _do_identify(page)
+    page.goto(BASE_URL + "/#/history")
+    entry = page.locator("[data-testid='history-entry']").first
+    entry.click()
+    page.wait_for_selector("[data-testid='history-result']")
+    entry.click()
+    assert not page.locator("[data-testid='history-result']").is_visible()

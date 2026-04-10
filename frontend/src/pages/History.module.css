@@ -52,6 +52,12 @@
   gap: var(--space-sm);
 }
 
+.entryWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
 .entry {
   background: var(--bg-surface);
   border: 1px solid #333;
@@ -60,6 +66,22 @@
   display: flex;
   align-items: center;
   gap: var(--space-md);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+
+.entry:hover {
+  border-color: var(--accent);
+}
+
+.entryActive {
+  border-color: var(--accent);
+}
+
+.resultPanel {
+  padding: var(--space-sm) 0;
 }
 
 .tool {
