@@ -18,6 +18,7 @@ export default function Identify() {
   const [candidates, setCandidates] = useState(null)
   const [lowConfidence, setLowConfidence] = useState(false)
   const [ocrFailed, setOcrFailed] = useState(false)
+  const [ocrText, setOcrText] = useState(null)
   const [selected, setSelected] = useState(null)
   const [showManualSearch, setShowManualSearch] = useState(false)
   const [noResults, setNoResults] = useState(false)
@@ -30,6 +31,7 @@ export default function Identify() {
     setLoading(true)
     setNetworkError(false)
     setOcrFailed(false)
+    setOcrText(null)
     setCandidates(null)
     setSelected(null)
     setNoResults(false)
@@ -39,6 +41,7 @@ export default function Identify() {
         setOcrFailed(true)
         setShowManualSearch(true)
       } else {
+        setOcrText(data.ocr_text || null)
         setCandidates(data.candidates)
         setLowConfidence(data.low_confidence)
       }
@@ -162,6 +165,14 @@ export default function Identify() {
             candidate={selected}
             onNotRightCard={handleNotRightCard}
           />
+        )}
+
+        {/* OCR text */}
+        {ocrText && (
+          <details className={styles.ocrSection}>
+            <summary className={styles.ocrToggle}>Raw OCR text</summary>
+            <pre className={styles.ocrText} data-testid="ocr-text">{ocrText}</pre>
+          </details>
         )}
       </main>
     </div>
