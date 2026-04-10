@@ -2,7 +2,7 @@ import tempfile
 import pytest
 from playwright.sync_api import Page
 from conftest import (
-    BASE_URL, MOCK_GRADE_RESULT, mock_grade_success,
+    BASE_URL, MOCK_GRADE_RESULT, _MOCK_GRADE_SIDE, mock_grade_success,
     mock_network_error, small_jpeg_bytes, GRADE_API_URL,
 )
 
@@ -53,7 +53,8 @@ def test_grade_result_shows_overall_grade(page: Page):
     _upload(page, "back")
     page.locator("[data-testid='grade-submit']").click()
     page.wait_for_selector("[data-testid='grade-result']")
-    assert "8" in page.locator("[data-testid='overall-grade']").inner_text()
+    # Two sides shown — check the first overall-grade element (front)
+    assert "8" in page.locator("[data-testid='overall-grade']").first.inner_text()
 
 
 def test_grade_result_shows_all_subgrades(page: Page):
@@ -89,12 +90,30 @@ def test_grade_result_shows_standard_label(page: Page):
     assert "psa" in page.locator("[data-testid='grade-result']").inner_text().lower()
 
 
+def test_grade_result_shows_front_and_back_sections(page: Page):
+    mock_grade_success(page)
+    page.goto(BASE_URL + "/#/grade")
+    _upload(page, "front")
+    _upload(page, "back")
+    page.locator("[data-testid='grade-submit']").click()
+    page.wait_for_selector("[data-testid='grade-result']")
+    result_text = page.locator("[data-testid='grade-result']").inner_text()
+    assert "front" in result_text.lower()
+    assert "back" in result_text.lower()
+    # Two overall-grade elements (one per side)
+    assert page.locator("[data-testid='overall-grade']").count() == 2
+
+
 def test_partial_subgrade_failure_shows_error_indicator(page: Page):
     """Spec: partial grading failure — show available sub-grades, error indicator for failed category."""
     partial_result = {
-        **MOCK_GRADE_RESULT,
-        "subgrades": {"centering": 8.5, "corners": None, "edges": 9.0, "surface": 7.5},
-        "reasoning": {"centering": "Good.", "corners": None, "edges": "Clean.", "surface": "Light."},
+        "standard": "psa",
+        "front": {
+            **_MOCK_GRADE_SIDE,
+            "subgrades": {"centering": 8.5, "corners": None, "edges": 9.0, "surface": 7.5},
+            "reasoning": {"centering": "Good.", "corners": None, "edges": "Clean.", "surface": "Light."},
+        },
+        "back": {**_MOCK_GRADE_SIDE},
     }
     mock_grade_success(page, result=partial_result)
     page.goto(BASE_URL + "/#/grade")
@@ -109,7 +128,11 @@ def test_partial_subgrade_failure_shows_error_indicator(page: Page):
 
 
 def test_cgc_result_shows_label_string(page: Page):
-    cgc_result = {**MOCK_GRADE_RESULT, "standard": "cgc", "overall": 8.0, "label": "Near Mint"}
+    cgc_result = {
+        "standard": "cgc",
+        "front": {**_MOCK_GRADE_SIDE, "overall": 8.0, "label": "Near Mint"},
+        "back": {**_MOCK_GRADE_SIDE, "overall": 8.0, "label": "Near Mint"},
+    }
     mock_grade_success(page, result=cgc_result)
     page.goto(BASE_URL + "/#/grade")
     _upload(page, "front")

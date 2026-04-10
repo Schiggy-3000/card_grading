@@ -50,8 +50,7 @@ MOCK_CANDIDATES = [
     }
 ]
 
-MOCK_GRADE_RESULT = {
-    "standard": "psa",
+_MOCK_GRADE_SIDE = {
     "overall": 8,
     "label": None,
     "subgrades": {
@@ -66,6 +65,13 @@ MOCK_GRADE_RESULT = {
         "edges": "Edges are clean with no visible nicks.",
         "surface": "Light surface scratching under close inspection.",
     },
+    "bbox_image": "",
+}
+
+MOCK_GRADE_RESULT = {
+    "standard": "psa",
+    "front": {**_MOCK_GRADE_SIDE},
+    "back": {**_MOCK_GRADE_SIDE, "overall": 7},
 }
 
 

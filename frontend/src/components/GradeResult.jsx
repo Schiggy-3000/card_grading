@@ -7,13 +7,22 @@ const DIM_LABELS = {
   surface: 'Surface',
 }
 
-export default function GradeResult({ result }) {
-  const { standard, overall, label, subgrades, reasoning } = result
-
+function GradeSide({ side, standard, sideLabel }) {
+  const { overall, label, subgrades, reasoning, bbox_image } = side
   return (
-    <div className={styles.result} data-testid="grade-result">
+    <div className={styles.side}>
+      <h3 className={styles.sideLabel}>{sideLabel}</h3>
+
+      {bbox_image && (
+        <img
+          className={styles.bboxImage}
+          src={`data:image/jpeg;base64,${bbox_image}`}
+          alt={`${sideLabel} with detected card boundary`}
+        />
+      )}
+
       <div className={styles.overall}>
-        <p className={styles.standardLabel}>{standard.toUpperCase()} Grade Estimate</p>
+        <p className={styles.standardLabel}>{standard.toUpperCase()} Grade</p>
         <p className={styles.grade} data-testid="overall-grade">
           {overall}
           {label && <span className={styles.label}> — {label}</span>}
@@ -43,6 +52,16 @@ export default function GradeResult({ result }) {
           )
         })}
       </div>
+    </div>
+  )
+}
+
+export default function GradeResult({ result }) {
+  const { standard, front, back } = result
+  return (
+    <div className={styles.result} data-testid="grade-result">
+      <GradeSide side={front} standard={standard} sideLabel="Front" />
+      <GradeSide side={back} standard={standard} sideLabel="Back" />
     </div>
   )
 }
