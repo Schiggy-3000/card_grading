@@ -63,7 +63,7 @@ def recognize(request: Request) -> Tuple:
         raw_text = ""
 
     if not raw_text:
-        return _add_cors(_json({"candidates": [], "ocr_failed": True, "low_confidence": False})), 200
+        return _add_cors(_json({"candidates": [], "ocr_failed": True, "low_confidence": False, "ocr_text": ""})), 200
 
     card_name_guess = first_line(raw_text)
     candidates = search_fn(card_name_guess)
@@ -73,4 +73,4 @@ def recognize(request: Request) -> Tuple:
     candidates.sort(key=lambda x: x["confidence"], reverse=True)
 
     low_conf = all(c["confidence"] < LOW_CONFIDENCE_THRESHOLD for c in candidates) if candidates else False
-    return _add_cors(_json({"candidates": candidates, "low_confidence": low_conf})), 200
+    return _add_cors(_json({"candidates": candidates, "low_confidence": low_conf, "ocr_text": raw_text})), 200
