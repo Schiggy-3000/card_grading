@@ -160,6 +160,20 @@ def test_manual_search_zero_results_shows_message(page: Page):
     page.wait_for_selector("[data-testid='no-results-msg']")
 
 
+def test_ocr_text_displayed_after_image_submit(page: Page):
+    mock_recognize_success(page)
+    page.goto(BASE_URL + "/#/identify")
+    page.locator("[data-testid='game-mtg']").click()
+    _upload_image(page, "front")
+    page.locator("[data-testid='identify-submit']").click()
+    page.wait_for_selector("[data-testid='candidate-list']")
+    # Expand the OCR details element to make content accessible
+    page.locator("details").evaluate("el => el.open = true")
+    page.wait_for_selector("[data-testid='ocr-text']")
+    ocr_text = page.locator("[data-testid='ocr-text']").inner_text()
+    assert "Black Lotus" in ocr_text
+
+
 def test_network_error_shows_retry_prompt(page: Page):
     mock_network_error(page, RECOGNIZE_API_URL)
     page.goto(BASE_URL + "/#/identify")

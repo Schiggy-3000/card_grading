@@ -2,6 +2,7 @@
 Classical OpenCV defect detection for card grading.
 All scores are on an internal 1.0–10.0 scale.
 """
+import base64
 from typing import Dict, Tuple
 
 import cv2
@@ -138,33 +139,48 @@ def _score_surface(img: np.ndarray, bbox: Tuple) -> Tuple[float, str]:
     return score, reason
 
 
-def analyze(front_bytes: bytes, back_bytes: bytes) -> Dict[str, float]:
-    scores, _ = analyze_with_reasoning(front_bytes, back_bytes)
-    return scores
+def _draw_bbox_b64(img: np.ndarray, bbox: Tuple[int, int, int, int]) -> str:
+    """Draw bbox rectangle on image, return as base64 JPEG string."""
+    x, y, w, h = bbox
+    out = img.copy()
+    cv2.rectangle(out, (x, y), (x + w, y + h), (0, 255, 0), 3)
+    _, buf = cv2.imencode('.jpg', out, [cv2.IMWRITE_JPEG_QUALITY, 85])
+    return base64.b64encode(bytes(buf)).decode()
+
+
+def _analyze_side(img_bytes: bytes) -> Dict:
+    """Analyze one card image side; return subgrades, reasoning, and bbox image."""
+    img = _decode(img_bytes)
+    bbox = _find_card_bbox(img)
+    center_score, center_reason = _score_centering(img, bbox)
+    corner_score, corner_reason = _score_corners(img, bbox)
+    edge_score, edge_reason = _score_edges(img, bbox)
+    surface_score, surface_reason = _score_surface(img, bbox)
+    return {
+        "subgrades": {
+            "centering": center_score,
+            "corners":   corner_score,
+            "edges":     edge_score,
+            "surface":   surface_score,
+        },
+        "reasoning": {
+            "centering": center_reason,
+            "corners":   corner_reason,
+            "edges":     edge_reason,
+            "surface":   surface_reason,
+        },
+        "bbox_image": _draw_bbox_b64(img, bbox),
+    }
 
 
 def analyze_with_reasoning(
     front_bytes: bytes, back_bytes: bytes
-) -> Tuple[Dict[str, float], Dict[str, str]]:
-    """Return per-dimension scores (1–10) and plain-text reasoning."""
-    front = _decode(front_bytes)
-    bbox = _find_card_bbox(front)
+) -> Tuple[Dict, Dict]:
+    """Return (front_result, back_result). Each dict has subgrades, reasoning, bbox_image."""
+    return _analyze_side(front_bytes), _analyze_side(back_bytes)
 
-    center_score, center_reason = _score_centering(front, bbox)
-    corner_score, corner_reason = _score_corners(front, bbox)
-    edge_score, edge_reason = _score_edges(front, bbox)
-    surface_score, surface_reason = _score_surface(front, bbox)
 
-    scores = {
-        "centering": center_score,
-        "corners":   corner_score,
-        "edges":     edge_score,
-        "surface":   surface_score,
-    }
-    reasoning = {
-        "centering": center_reason,
-        "corners":   corner_reason,
-        "edges":     edge_reason,
-        "surface":   surface_reason,
-    }
-    return scores, reasoning
+def analyze(front_bytes: bytes, back_bytes: bytes) -> Dict[str, float]:
+    """Return front subgrades only (backward-compatible convenience function)."""
+    front, _ = analyze_with_reasoning(front_bytes, back_bytes)
+    return front["subgrades"]

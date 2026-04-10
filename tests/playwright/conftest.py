@@ -50,8 +50,7 @@ MOCK_CANDIDATES = [
     }
 ]
 
-MOCK_GRADE_RESULT = {
-    "standard": "psa",
+_MOCK_GRADE_SIDE = {
     "overall": 8,
     "label": None,
     "subgrades": {
@@ -66,6 +65,13 @@ MOCK_GRADE_RESULT = {
         "edges": "Edges are clean with no visible nicks.",
         "surface": "Light surface scratching under close inspection.",
     },
+    "bbox_image": "",
+}
+
+MOCK_GRADE_RESULT = {
+    "standard": "psa",
+    "front": {**_MOCK_GRADE_SIDE},
+    "back": {**_MOCK_GRADE_SIDE, "overall": 7},
 }
 
 
@@ -76,7 +82,11 @@ def page_at_home(page: Page):
 
 
 def mock_recognize_success(page: Page, candidates=None, low_confidence=False):
-    payload = {"candidates": candidates or MOCK_CANDIDATES, "low_confidence": low_confidence}
+    payload = {
+        "candidates": candidates or MOCK_CANDIDATES,
+        "low_confidence": low_confidence,
+        "ocr_text": "Black Lotus\nSorcery\nDestroy all lands.\n0",
+    }
     page.route(RECOGNIZE_API_URL, lambda r: _fulfill_json(r, 200, json.dumps(payload)))
 
 

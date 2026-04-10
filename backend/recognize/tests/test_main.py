@@ -72,6 +72,16 @@ def test_ocr_failure_returns_empty_candidates_with_flag():
     assert body.get("ocr_failed") is True
 
 
+def test_image_mode_returns_ocr_text():
+    from main import recognize
+    with patch("main.extract_text", return_value="Black Lotus\nSorcery\n0"), \
+         patch("main.search_mtg", return_value=MOCK_CANDIDATES):
+        resp, status = recognize(make_request({"image": FAKE_IMAGE_B64, "game": "mtg"}))
+    body = resp.get_json()
+    assert "ocr_text" in body
+    assert "Black Lotus" in body["ocr_text"]
+
+
 def test_non_post_returns_405():
     from main import recognize
     resp, status = recognize(make_request({}, method="GET"))
