@@ -44,7 +44,6 @@ flowchart LR
     Recognize --> Vision
     Recognize --> Scryfall
     Recognize --> FAB
-    Grade --> Vision
     Grade --> OpenCV
 ```
 
