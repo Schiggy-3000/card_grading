@@ -1,12 +1,41 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
-import CardDetail from '../components/CardDetail'
 import GradeResult from '../components/GradeResult'
 import styles from './History.module.css'
 
 function formatTime(iso) {
   return new Date(iso).toLocaleString()
+}
+
+function IdentifyResult({ result }) {
+  const { candidates, ocr_text, imagePreviewUrl } = result
+  return (
+    <div className={styles.identifyResult}>
+      {imagePreviewUrl && (
+        <img
+          className={styles.identifyImage}
+          src={imagePreviewUrl}
+          alt="Uploaded card"
+        />
+      )}
+      <ul className={styles.candidateList}>
+        {candidates.map((c, i) => (
+          <li key={i} className={styles.candidateItem}>
+            <span className={styles.candidateName}>{c.name}</span>
+            <span className={styles.candidateMeta}>{c.edition}{c.foil ? ' · Foil' : ''} · {c.language}</span>
+            <span className={styles.candidateConf}>{Math.round(c.confidence * 100)}%</span>
+          </li>
+        ))}
+      </ul>
+      {ocr_text && (
+        <details className={styles.ocrSection}>
+          <summary className={styles.ocrToggle}>Raw OCR text</summary>
+          <pre className={styles.ocrText}>{ocr_text}</pre>
+        </details>
+      )}
+    </div>
+  )
 }
 
 export default function History() {
@@ -49,7 +78,7 @@ export default function History() {
                 {selectedEntry?.id === entry.id && (
                   <div className={styles.resultPanel} data-testid="history-result">
                     {entry.tool === 'identify' && (
-                      <CardDetail candidate={entry.result} onNotRightCard={() => setSelectedEntry(null)} />
+                      <IdentifyResult result={entry.result} />
                     )}
                     {entry.tool === 'grade' && (
                       <GradeResult result={entry.result} />

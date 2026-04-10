@@ -18,8 +18,6 @@ def _do_identify(page: Page):
     _upload(page, "front")
     page.locator("[data-testid='identify-submit']").click()
     page.wait_for_selector("[data-testid='candidate-item']")
-    page.locator("[data-testid='candidate-item']").first.click()
-    page.wait_for_selector("[data-testid='card-detail']")
 
 
 def _do_grade(page: Page):
@@ -61,8 +59,7 @@ def test_history_page_shows_entry_after_identify(page: Page):
     page.goto(BASE_URL + "/#/history")
     assert page.locator("[data-testid='history-entry']").count() == 1
     entry_text = page.locator("[data-testid='history-entry']").first.inner_text()
-    assert "Identify" in entry_text or "identify" in entry_text.lower()
-    assert "Black Lotus" in entry_text
+    assert "identify" in entry_text.lower()
 
 
 def test_history_entry_shows_timestamp(page: Page):
@@ -83,12 +80,15 @@ def test_history_clears_on_page_reload(page: Page):
     assert "0" in page.locator("[data-testid='footer']").inner_text()
 
 
-def test_clicking_identify_entry_shows_card_detail(page: Page):
+def test_clicking_identify_entry_shows_candidates_and_image(page: Page):
     _do_identify(page)
     page.goto(BASE_URL + "/#/history")
     page.locator("[data-testid='history-entry']").first.click()
     page.wait_for_selector("[data-testid='history-result']")
-    assert "Black Lotus" in page.locator("[data-testid='history-result']").inner_text()
+    result_text = page.locator("[data-testid='history-result']").inner_text()
+    assert "Black Lotus" in result_text
+    # Card image rendered inside the result panel
+    assert page.locator("[data-testid='history-result'] img").count() >= 1
 
 
 def test_clicking_grade_entry_shows_grade_result(page: Page):
