@@ -21,6 +21,11 @@
   --spacing-lg: 24px;
   --spacing-xl: 40px;
   --transition: 150ms ease;
+  --text-on-accent: #000;
+  --text-dim: #aaa;
+  --accent-subtle: rgba(201, 168, 76, 0.05);
+  --accent-tint:   rgba(201, 168, 76, 0.15);
+  --overlay-bg:    rgba(0, 0, 0, 0.7);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -44,3 +49,26 @@ button {
 }
 
 img { max-width: 100%; display: block; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 1em;
+  height: 1em;
+  border: 2px solid var(--text-on-accent);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-loading::after { animation: none; opacity: 0.5; }
+}

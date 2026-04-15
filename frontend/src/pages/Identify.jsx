@@ -123,24 +123,25 @@ export default function Identify() {
 
         {/* Submit */}
         <button
-          className={styles.submit}
+          className={`${styles.submit}${loading ? ' btn-loading' : ''}`}
           data-testid="identify-submit"
           disabled={!canSubmit || loading}
           onClick={handleSubmit}
+          title={!game ? 'Select MTG or FAB first' : !imageB64 ? 'Upload a card image first' : undefined}
         >
           {loading ? 'Identifying…' : 'Identify Card'}
         </button>
 
         {/* Network error */}
         {networkError && (
-          <p className={styles.error} data-testid="error-retry">
+          <p className={styles.error} data-testid="error-retry" role="alert">
             Network error. Please try again.
           </p>
         )}
 
         {/* OCR failed */}
         {ocrFailed && (
-          <p className={styles.warning} data-testid="ocr-failed-msg">
+          <p className={styles.warning} data-testid="ocr-failed-msg" role="alert">
             Could not read card — try a clearer photo or search by name below.
           </p>
         )}
@@ -171,11 +172,12 @@ export default function Identify() {
           <CardDetail
             candidate={selected}
             onNotRightCard={handleNotRightCard}
+            onGrade={() => navigate('/grade')}
           />
         )}
 
         {/* Uploaded image + OCR text side by side */}
-        {ocrText && (
+        {ocrText && !selected && (
           <div className={styles.ocrRow}>
             {imagePreviewUrl && (
               <img

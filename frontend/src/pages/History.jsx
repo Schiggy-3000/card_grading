@@ -66,6 +66,7 @@ export default function History() {
                 <button
                   className={`${styles.entry} ${selectedEntry?.id === entry.id ? styles.entryActive : ''}`}
                   data-testid="history-entry"
+                  aria-expanded={selectedEntry?.id === entry.id}
                   onClick={() => handleEntryClick(entry)}
                 >
                   <span className={styles.tool}>{entry.tool}</span>

@@ -25,10 +25,11 @@
   background: transparent;
   border: none;
   color: var(--accent);
-  font-size: 1.5rem;
   cursor: pointer;
   transition: var(--transition);
   padding: var(--spacing-xs);
+  display: flex;
+  align-items: center;
 }
 
 .settingsBtn:hover {
@@ -56,15 +57,29 @@
   min-width: 200px;
   transition: var(--transition);
   font-family: inherit;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .toolCard:hover {
   border-color: var(--accent-hover);
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
 }
 
 .toolIcon {
-  font-size: 2.5rem;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+}
+
+.toolIcon svg {
+  width: 2rem;
+  height: 2rem;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .toolName {
@@ -76,7 +91,7 @@
 }
 
 .toolDesc {
-  color: #888;
+  color: var(--text-secondary);
   font-size: 0.85rem;
   text-align: center;
 }
@@ -86,8 +101,8 @@
   justify-content: space-between;
   align-items: center;
   padding-top: var(--spacing-md);
-  border-top: 1px solid #333;
-  color: #888;
+  border-top: 1px solid var(--border);
+  color: var(--text-secondary);
   font-size: 0.85rem;
 }
 

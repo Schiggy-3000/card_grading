@@ -4,6 +4,12 @@ function confidencePct(score) {
   return `${Math.round(score * 100)}%`
 }
 
+function confClass(score) {
+  if (score >= 0.85) return styles.confHigh
+  if (score >= 0.55) return styles.confMid
+  return styles.confLow
+}
+
 export default function CandidateList({ candidates, lowConfidence, onSelect }) {
   return (
     <div data-testid="candidate-list">
@@ -21,7 +27,7 @@ export default function CandidateList({ candidates, lowConfidence, onSelect }) {
         >
           <span className={styles.name}>{c.name}</span>
           <span className={styles.edition}>{c.edition}{c.foil ? ' · Foil' : ''} · {c.language}</span>
-          <span className={styles.confidence}>{confidencePct(c.confidence)}</span>
+          <span className={confClass(c.confidence)}>{confidencePct(c.confidence)}</span>
         </button>
       ))}
     </div>

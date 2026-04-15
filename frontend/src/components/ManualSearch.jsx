@@ -25,7 +25,7 @@ export default function ManualSearch({ onSearch, loading }) {
         disabled={loading}
       />
       <button
-        className={styles.submit}
+        className={`${styles.submit}${loading ? ' btn-loading' : ''}`}
         data-testid="manual-search-submit"
         type="submit"
         disabled={loading || !query.trim()}

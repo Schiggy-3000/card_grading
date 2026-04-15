@@ -18,7 +18,7 @@
 .zone:hover,
 .dragging {
   border-color: var(--accent-hover);
-  background: rgba(201, 168, 76, 0.05);
+  background: var(--accent-subtle);
 }
 
 .filled {
@@ -35,7 +35,7 @@
 }
 
 .hint {
-  color: #888;
+  color: var(--text-secondary);
   font-size: 0.8rem;
   margin: 0;
 }
@@ -46,14 +46,14 @@
 }
 
 .fileName {
-  color: #ccc;
+  color: var(--text-dim);
   font-size: 0.9rem;
   margin: 0;
   word-break: break-all;
 }
 
 .error {
-  color: #e74c3c;
+  color: var(--danger);
   font-size: 0.8rem;
   margin: 0;
 }

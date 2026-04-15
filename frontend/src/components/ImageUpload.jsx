@@ -53,7 +53,7 @@ export default function ImageUpload({ label, testId, onFile = () => {}, onPrevie
       onDragOver={e => { e.preventDefault(); setDragging(true) }}
       onDragLeave={e => { if (!e.currentTarget.contains(e.relatedTarget)) setDragging(false) }}
       onDrop={e => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files[0]; if (f) handleFile(f) }}
-      onClick={() => inputRef.current.click()}
+      onClick={() => { setError(null); inputRef.current.click() }}
       role="button"
       tabIndex={0}
       onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inputRef.current.click() } }}
