@@ -81,9 +81,9 @@
 
 .sampleBtn {
   background: var(--bg-surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--accent-dim);
   border-radius: var(--radius);
-  color: var(--text-secondary);
+  color: var(--accent-dim);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
