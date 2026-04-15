@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🃏 Card Grading
+# Card Grading
 
 **AI-powered card identification and grading for MTG and Flesh & Blood**
 
@@ -22,9 +22,9 @@ Upload a photo of any **Magic: The Gathering** or **Flesh and Blood** card and g
 
 | Feature | Description |
 |---|---|
-| 🔍 **Identify** | OCR + AI recognition — returns up to 5 ranked candidates with confidence scores, edition, foil status, market price, and raw OCR text |
-| 📊 **Grade** | Analyzes front and back for physical defects — returns a condition score per dimension (centering, corners, edges, surface) on the PSA / BGS / CGC / TAG scale |
-| 📋 **History** | Every identify and grade result is stored for the current session — tap any entry to expand the full result |
+| <img src="docs/icons/search.svg" width="16" height="16" align="center"> &nbsp;**Identify** | OCR + AI recognition — returns up to 5 ranked candidates with confidence scores, edition, foil status, market price, and raw OCR text |
+| <img src="docs/icons/chart.svg" width="16" height="16" align="center"> &nbsp;**Grade** | Analyzes front and back for physical defects — returns a condition score per dimension (centering, corners, edges, surface) on the PSA / BGS / CGC / TAG scale |
+| <img src="docs/icons/clock.svg" width="16" height="16" align="center"> &nbsp;**History** | Every identify and grade result is stored for the current session — tap any entry to expand the full result |
 
 No card to hand? Both workflows include a **Load sample** button that pre-loads a Black Lotus (Unlimited Edition) so you can see a real result without uploading anything.
 
@@ -34,13 +34,13 @@ No card to hand? Both workflows include a **Load sample** button that pre-loads 
 
 ```mermaid
 flowchart LR
-    Browser["🌐 React SPA\nGitHub Pages"]
-    Recognize["☁️ recognize\nCloud Function"]
-    Grade["☁️ grade\nCloud Function"]
-    Vision["👁️ Cloud Vision API\n(OCR)"]
-    Scryfall["🧙 Scryfall API\n(MTG cards)"]
-    FAB["⚔️ FAB Cube\n(FAB cards)"]
-    OpenCV["📐 OpenCV\n(defect detection)"]
+    Browser["React SPA\nGitHub Pages"]
+    Recognize["recognize\nCloud Function"]
+    Grade["grade\nCloud Function"]
+    Vision["Cloud Vision API\n(OCR)"]
+    Scryfall["Scryfall API\n(MTG cards)"]
+    FAB["FAB Cube\n(FAB cards)"]
+    OpenCV["OpenCV\n(defect detection)"]
 
     Browser -- "POST /recognize" --> Recognize
     Browser -- "POST /grade" --> Grade
@@ -217,6 +217,6 @@ Your preferred standard is saved in `localStorage` and applied to every grading 
 
 <div align="center">
 
-Built with ☁️ Google Cloud · ⚛️ React · 🐍 Python
+Built with &nbsp;<img src="https://cdn.simpleicons.org/googlecloud/4285F4" height="14" align="center"> Google Cloud &nbsp;·&nbsp; <img src="https://cdn.simpleicons.org/react/61DAFB" height="14" align="center"> React &nbsp;·&nbsp; <img src="https://cdn.simpleicons.org/python/3776AB" height="14" align="center"> Python
 
 </div>
