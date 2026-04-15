@@ -4,7 +4,6 @@
 
 
 ### Links
-
 Grading standards by company
 - PSA: https://www.psacard.com/gradingstandards#cards
 - BGS: https://www.beckett.com/grading-standards
@@ -21,7 +20,7 @@ Card prices
 
 ### Tech stack
 - Code repository: https://github.com/Schiggy-3000/card_grading.git
-- Frontend UI: GitHub Pages
+- Frontend UI: GitHub Pages (GitHub Pages > Build and deplyoment > GitHub Actions, not Deploy from a branch)
 - Frontend: React
 - Backend: Python (deployed as Google Cloud Functions)
 - Frontend verification: Playwright (Python)
@@ -47,7 +46,12 @@ Card prices
 
 
 ### Miscellaneous
-- Google Cloud Vision API: Is enabled
+- Google Cloud Resource Manager API: Enabled
+- Google Cloud Vision API: Enabled
+- Google Cloud Functions API: Enabled
+- Google Cloud Build API: Enabled
+- Google Cloud Run Admin API: Enabled
+- Google Artifact Registry API: Enabled
 - GitHub repo > Settings > Pages > Build and deployment > GitHub Actions 
 - GitHub repo > Settings > Secrets and variables > Actions > Repository secrets > GCP_PROJECT_ID is added
 - GitHub repo > Settings > Secrets and variables > Actions > Repository secrets > GCP_SERVICE_ACCOUNT_KEY is added
@@ -82,3 +86,8 @@ Card prices
 ### GitHub README.md
 - Carefully research what best practices are when creating a README.md
 - I am a visual person, make sure to take this into account
+
+
+### UI/UX
+- Carefully research what best practices are when creating a user interface and transfere these insights to this project
+- No emoji icons, only proper SVG icons
