@@ -74,7 +74,7 @@ export default function Grade() {
         </div>
 
         <button className={styles.sampleBtn} onClick={loadSample}>
-          No card? Load Black Lotus Unlimited as sample →
+          Load sample — Black Lotus Unlimited
         </button>
 
         <button

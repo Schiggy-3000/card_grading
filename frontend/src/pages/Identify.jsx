@@ -107,6 +107,19 @@ export default function Identify() {
       </header>
 
       <main className={styles.content}>
+        {/* Upload */}
+        <ImageUpload
+          ref={uploadRef}
+          label="Front of card"
+          testId="front"
+          onFile={setImageB64}
+          onPreview={setImagePreviewUrl}
+        />
+
+        <button className={styles.sampleBtn} onClick={loadSample}>
+          Load sample — Black Lotus Unlimited
+        </button>
+
         {/* Game selector */}
         <div className={styles.gameSelector}>
           {['mtg', 'fab'].map(g => (
@@ -121,19 +134,6 @@ export default function Identify() {
             </button>
           ))}
         </div>
-
-        {/* Upload */}
-        <ImageUpload
-          ref={uploadRef}
-          label="Front of card"
-          testId="front"
-          onFile={setImageB64}
-          onPreview={setImagePreviewUrl}
-        />
-
-        <button className={styles.sampleBtn} onClick={loadSample}>
-          No card? Load Black Lotus Unlimited as sample →
-        </button>
 
         {/* Submit */}
         <button
