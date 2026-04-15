@@ -22,8 +22,11 @@ Upload a photo of any **Magic: The Gathering** or **Flesh and Blood** card and g
 
 | Feature | Description |
 |---|---|
-| 🔍 **Identify** | Recognizes the card via OCR + AI — returns name, edition, foil status, and price |
-| 📊 **Grade** | Analyzes front and back for physical defects — returns a condition score (PSA / BGS / CGC / TAG) |
+| 🔍 **Identify** | OCR + AI recognition — returns up to 5 ranked candidates with confidence scores, edition, foil status, market price, and raw OCR text |
+| 📊 **Grade** | Analyzes front and back for physical defects — returns a condition score per dimension (centering, corners, edges, surface) on the PSA / BGS / CGC / TAG scale |
+| 📋 **History** | Every identify and grade result is stored for the current session — tap any entry to expand the full result |
+
+No card to hand? Both workflows include a **Load sample** button that pre-loads a Black Lotus (Unlimited Edition) so you can see a real result without uploading anything.
 
 ---
 
