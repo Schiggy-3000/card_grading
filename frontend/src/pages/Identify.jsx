@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import ImageUpload from '../components/ImageUpload'
@@ -8,9 +8,13 @@ import ManualSearch from '../components/ManualSearch'
 import { recognizeImage, recognizeQuery } from '../api/recognize'
 import styles from './Identify.module.css'
 
+const SAMPLE_FRONT = `${import.meta.env.BASE_URL}samples/MTG/Black_Lotus_Unlimited_Front.jpg`
+
 export default function Identify() {
   const navigate = useNavigate()
   const { addHistoryEntry } = useApp()
+
+  const uploadRef = useRef(null)
 
   const [game, setGame] = useState(null)
   const [imageB64, setImageB64] = useState(null)
@@ -26,6 +30,11 @@ export default function Identify() {
   const [networkError, setNetworkError] = useState(false)
 
   const canSubmit = game && imageB64
+
+  async function loadSample() {
+    setGame('mtg')
+    await uploadRef.current?.load(SAMPLE_FRONT, 'Black_Lotus_Unlimited_Front.jpg')
+  }
 
   async function handleSubmit() {
     if (!canSubmit) return
@@ -115,11 +124,16 @@ export default function Identify() {
 
         {/* Upload */}
         <ImageUpload
+          ref={uploadRef}
           label="Front of card"
           testId="front"
           onFile={setImageB64}
           onPreview={setImagePreviewUrl}
         />
+
+        <button className={styles.sampleBtn} onClick={loadSample}>
+          No card? Load Black Lotus Unlimited as sample →
+        </button>
 
         {/* Submit */}
         <button

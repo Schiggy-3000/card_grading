@@ -1,10 +1,13 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import styles from './ImageUpload.module.css'
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const MAX_SIZE_BYTES = 10 * 1024 * 1024
 
-export default function ImageUpload({ label, testId, onFile = () => {}, onPreview = () => {} }) {
+const ImageUpload = forwardRef(function ImageUpload(
+  { label, testId, onFile = () => {}, onPreview = () => {} },
+  ref
+) {
   const inputRef = useRef(null)
   const readerRef = useRef(null)
   const [fileName, setFileName] = useState(null)
@@ -14,6 +17,29 @@ export default function ImageUpload({ label, testId, onFile = () => {}, onPrevie
   useEffect(() => {
     return () => { readerRef.current?.abort() }
   }, [])
+
+  useImperativeHandle(ref, () => ({
+    async load(url, displayName) {
+      setError(null)
+      setFileName(null)
+      try {
+        const resp = await fetch(url)
+        if (!resp.ok) throw new Error('fetch failed')
+        const blob = await resp.blob()
+        const dataUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onload = () => resolve(reader.result)
+          reader.onerror = reject
+          reader.readAsDataURL(blob)
+        })
+        setFileName(displayName)
+        onPreview(dataUrl)
+        onFile(dataUrl.split(',')[1])
+      } catch {
+        setError('Could not load sample image.')
+      }
+    }
+  }))
 
   async function handleFile(file) {
     setError(null)
@@ -82,4 +108,6 @@ export default function ImageUpload({ label, testId, onFile = () => {}, onPrevie
       )}
     </div>
   )
-}
+})
+
+export default ImageUpload

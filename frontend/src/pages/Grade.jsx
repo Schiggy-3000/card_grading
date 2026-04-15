@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import ImageUpload from '../components/ImageUpload'
@@ -6,9 +6,15 @@ import GradeResult from '../components/GradeResult'
 import { gradeCard } from '../api/grade'
 import styles from './Grade.module.css'
 
+const SAMPLE_FRONT = `${import.meta.env.BASE_URL}samples/MTG/Black_Lotus_Unlimited_Front.jpg`
+const SAMPLE_BACK  = `${import.meta.env.BASE_URL}samples/MTG/Black_Lotus_Unlimited_Back.jpg`
+
 export default function Grade() {
   const navigate = useNavigate()
   const { gradingStandard, addHistoryEntry } = useApp()
+
+  const frontRef = useRef(null)
+  const backRef  = useRef(null)
 
   const [frontB64, setFrontB64] = useState(null)
   const [backB64, setBackB64] = useState(null)
@@ -35,6 +41,13 @@ export default function Grade() {
     }
   }
 
+  async function loadSample() {
+    await Promise.all([
+      frontRef.current?.load(SAMPLE_FRONT, 'Black_Lotus_Unlimited_Front.jpg'),
+      backRef.current?.load(SAMPLE_BACK,  'Black_Lotus_Unlimited_Back.jpg'),
+    ])
+  }
+
   function handleReset() {
     setFrontB64(null)
     setBackB64(null)
@@ -56,9 +69,13 @@ export default function Grade() {
         </p>
 
         <div className={styles.uploads}>
-          <ImageUpload key={`front-${resetKey}`} label="Front" testId="front" onFile={setFrontB64} />
-          <ImageUpload key={`back-${resetKey}`} label="Back" testId="back" onFile={setBackB64} />
+          <ImageUpload key={`front-${resetKey}`} ref={frontRef} label="Front" testId="front" onFile={setFrontB64} />
+          <ImageUpload key={`back-${resetKey}`}  ref={backRef}  label="Back"  testId="back"  onFile={setBackB64} />
         </div>
+
+        <button className={styles.sampleBtn} onClick={loadSample}>
+          No card? Load Black Lotus Unlimited as sample →
+        </button>
 
         <button
           className={`${styles.submit}${loading ? ' btn-loading' : ''}`}

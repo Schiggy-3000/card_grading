@@ -60,6 +60,22 @@
   color: var(--text-on-accent);
 }
 
+.sampleBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+  text-align: left;
+  transition: var(--transition);
+}
+
+.sampleBtn:hover {
+  color: var(--accent);
+}
+
 .submit {
   background: var(--accent);
   color: var(--text-on-accent);
