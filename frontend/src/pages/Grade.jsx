@@ -15,6 +15,7 @@ export default function Grade() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
   const [networkError, setNetworkError] = useState(false)
+  const [resetKey, setResetKey] = useState(0)
 
   const canSubmit = frontB64 && backB64
 
@@ -34,6 +35,14 @@ export default function Grade() {
     }
   }
 
+  function handleReset() {
+    setFrontB64(null)
+    setBackB64(null)
+    setResult(null)
+    setNetworkError(false)
+    setResetKey(k => k + 1)
+  }
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
@@ -47,26 +56,33 @@ export default function Grade() {
         </p>
 
         <div className={styles.uploads}>
-          <ImageUpload label="Front" testId="front" onFile={setFrontB64} />
-          <ImageUpload label="Back" testId="back" onFile={setBackB64} />
+          <ImageUpload key={`front-${resetKey}`} label="Front" testId="front" onFile={setFrontB64} />
+          <ImageUpload key={`back-${resetKey}`} label="Back" testId="back" onFile={setBackB64} />
         </div>
 
         <button
-          className={styles.submit}
+          className={`${styles.submit}${loading ? ' btn-loading' : ''}`}
           data-testid="grade-submit"
           disabled={!canSubmit || loading}
           onClick={handleSubmit}
+          title={!canSubmit ? 'Upload front and back images first' : undefined}
         >
           {loading ? 'Analyzing…' : 'Analyze Card'}
         </button>
 
         {networkError && (
-          <p className={styles.error} data-testid="error-retry">
+          <p className={styles.error} data-testid="error-retry" role="alert">
             Network error. Please try again.
           </p>
         )}
 
         {result && <GradeResult result={result} />}
+
+        {result && (
+          <button className={styles.reset} onClick={handleReset}>
+            Grade another card
+          </button>
+        )}
       </main>
     </div>
   )

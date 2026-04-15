@@ -7,7 +7,7 @@
 .item {
   width: 100%;
   background: var(--bg-surface);
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: var(--spacing-md);
   display: flex;
@@ -20,27 +20,41 @@
 
 .item:hover {
   border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transform: translateY(-1px);
 }
 
 .name {
-  color: #fff;
+  color: var(--text-primary);
   font-size: 1rem;
   font-weight: 600;
 }
 
 .edition {
-  color: #888;
+  color: var(--text-secondary);
   font-size: 0.8rem;
 }
 
-.confidence {
-  color: var(--accent);
+.confHigh {
   font-size: 0.85rem;
   font-weight: 600;
+  color: var(--success);
+}
+
+.confMid {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--warning);
+}
+
+.confLow {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--danger);
 }
 
 .warning {
-  color: #f39c12;
+  color: var(--warning);
   font-size: 0.85rem;
   margin-bottom: var(--spacing-sm);
 }

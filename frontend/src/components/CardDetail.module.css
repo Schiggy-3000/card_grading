@@ -2,9 +2,10 @@
   display: flex;
   gap: var(--spacing-lg);
   background: var(--bg-surface);
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: var(--spacing-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .image {
@@ -23,20 +24,20 @@
 }
 
 .name {
-  color: #fff;
+  color: var(--text-primary);
   font-size: 1.2rem;
   font-weight: 700;
   margin: 0;
 }
 
 .edition {
-  color: #aaa;
+  color: var(--text-dim);
   font-size: 0.9rem;
   margin: 0;
 }
 
 .meta {
-  color: #888;
+  color: var(--text-secondary);
   font-size: 0.8rem;
   margin: 0;
 }
@@ -48,15 +49,40 @@
   margin: 0;
 }
 
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-top: auto;
+}
+
+.gradeBtn {
+  background: var(--accent);
+  color: var(--text-on-accent);
+  border: none;
+  border-radius: var(--radius);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  align-self: flex-start;
+}
+
+.gradeBtn:hover {
+  background: var(--accent-hover);
+}
+
 .notRight {
   background: transparent;
-  border: 1px solid #555;
-  color: #888;
+  border: 1px solid var(--text-muted);
+  color: var(--text-secondary);
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius);
   cursor: pointer;
   font-size: 0.8rem;
-  margin-top: auto;
   align-self: flex-start;
   transition: var(--transition);
 }

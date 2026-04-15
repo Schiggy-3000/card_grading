@@ -7,6 +7,13 @@ const DIM_LABELS = {
   surface: 'Surface',
 }
 
+function gradeColor(score, standard) {
+  const pct = score / (standard === 'tag' ? 100 : 10)
+  if (pct >= 0.8) return 'var(--success)'
+  if (pct >= 0.5) return 'var(--warning)'
+  return 'var(--danger)'
+}
+
 function GradeSide({ side, standard, sideLabel }) {
   const { overall, label, subgrades, reasoning, bbox_image } = side
   return (
@@ -23,7 +30,11 @@ function GradeSide({ side, standard, sideLabel }) {
 
       <div className={styles.overall}>
         <p className={styles.standardLabel}>{standard.toUpperCase()} Grade</p>
-        <p className={styles.grade} data-testid="overall-grade">
+        <p
+          className={styles.grade}
+          style={{ color: gradeColor(overall, standard) }}
+          data-testid="overall-grade"
+        >
           {overall}
           {label && <span className={styles.label}> — {label}</span>}
         </p>
@@ -44,7 +55,12 @@ function GradeSide({ side, standard, sideLabel }) {
                 </span>
               ) : (
                 <>
-                  <span className={styles.dimScore}>{score.toFixed(1)}</span>
+                  <span
+                    className={styles.dimScore}
+                    style={{ color: gradeColor(score, standard) }}
+                  >
+                    {score.toFixed(1)}
+                  </span>
                   <p className={styles.dimReason}>{reasoning[key]}</p>
                 </>
               )}
